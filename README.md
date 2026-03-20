@@ -1,6 +1,6 @@
-# ShopZone - Premium E-Commerce SPA
+# ShopZone v2 - Advanced State Management Upgrade
 
-A sleek, responsive, and dynamic Single Page Application (SPA) built with React, React Router, and the Context API. It features product browsing, detailed views, global cart state management, and a premium glassmorphic UI.
+A production-grade upgrade of the ShopZone E-Commerce SPA, migrating from Context API to **Redux Toolkit (RTK)** with `redux-persist`. Features enterprise-level global state management, advanced product filtering, render optimization with `useMemo` & `useCallback`, and a fully dynamic Dark/Light Theme Manager — all controlled through a centralized Redux store.
 
 ---
 
@@ -12,6 +12,7 @@ A sleek, responsive, and dynamic Single Page Application (SPA) built with React,
 - [Installation](#-installation)
 - [Usage](#-usage)
 - [How It Works](#-how-it-works)
+- [Redux Store Architecture](#-redux-store-architecture)
 - [Responsive Design](#-responsive-design)
 - [Acknowledgments](#-acknowledgments)
 - [Contact](#-contact)
@@ -20,40 +21,43 @@ A sleek, responsive, and dynamic Single Page Application (SPA) built with React,
 
 ## 📸 Preview
 
-| Desktop View |
-|:---:|
-| ![Desktop View](Screenshots/desktop-preview.png) |
-
+| Desktop View - Dark Mode | Desktop View - Light Mode |
+|:---:|:---:|
+| ![Dark Mode](Screenshots/dark-preview.png) | ![Light Mode](Screenshots/light-preview.png) |
 
 ---
 
 ## 🚀 Demo
 Check out the live version here:  
-👉 **[Live Demo Link](https://shop-zone-eta.vercel.app/)** 
+👉 **[Live Demo Link](https://shop-zone-eta.vercel.app/)**
 
 ---
 
 ## ✨ Features
 
-- 🛒 **Dynamic E-Commerce Front**: Browse curated products fetching in real-time.
-- 🔗 **Single Page Routing**: Seamless page transitions without reloading using React Router v6.
-- 📦 **Global State Management**: Context API powers the shopping cart ensuring it's accessible anywhere.
-- 🎨 **Premium UI**: Features a modern, dark-themed, glassmorphism-inspired design with smooth animations.
+- 🛒 **Redux-Powered Cart**: Shopping cart fully migrated to a Redux `cartSlice` with `addToCart`, `removeFromCart`, `updateQuantity`, and `clearCart` actions.
+- 🔗 **Single Page Routing**: Seamless page transitions without reloading using React Router v7.
+- 🗃️ **Enterprise State Management**: Redux Toolkit replaces all Context API usage. One centralized store manages cart, auth, filters, products, and theme.
+- 💾 **Persistent State**: `redux-persist` ensures cart, auth session, and theme preference all survive page refreshes via `localStorage`.
+- 🔍 **Advanced Product Filtering**: A dedicated Filter Sidebar lets users filter by Category, Price Range, Minimum Rating, and Sort Order — all stored in global Redux state.
+- 🌗 **Dynamic Theme Manager**: A Sun/Moon toggle in the Navbar switches between Dark and Light mode instantly. Theme state lives in Redux and persists across sessions.
+- ⚡ **Render Optimization**: `useMemo` prevents re-computation of filtered product lists. `useCallback` memoizes event handlers. `React.memo` wraps product cards to prevent unnecessary re-renders.
 - 📱 **Fully Responsive**: Adapts elegantly across desktop and mobile screens using CSS Grid and Flexbox.
-- 🔍 **Detailed Views**: Click on any product to see full descriptions, ratings, and larger imagery.
-- 🛍️ **Interactive Cart**: Instantly add items, watch the Navbar badge update, and review your total order summary.
+- 🎨 **Dual-Theme UI**: All styles use CSS custom properties (`--bg-primary`, `--text-primary`, etc.) that respond instantly to theme changes via `data-theme` attribute.
 
 ---
 
 ## 🛠 Technologies Used
 
--   **React**: Component-based UI library for building interactive interfaces.
--   **React Router v6**: For handling client-side routing (`BrowserRouter`, `Routes`, `Route`).
--   **Context API**: Built-in React tool for managing global state (Cart).
--   **Vite**: Next-generation frontend tooling for amazingly fast dev environment.
--   **Vanilla CSS**: Custom styling, grid layouts, animations, and glass effects.
--   **Lucide React**: For sleek, scalable SVG icons.
--   **DummyJSON API**: Providing realistic mock product data.
+-   **React 19**: Component-based UI library for building interactive interfaces.
+-   **React Router v7**: For handling client-side routing (`BrowserRouter`, `Routes`, `Route`).
+-   **Redux Toolkit (RTK)**: Modern industry-standard state management. Replaces all Context API usage.
+-   **react-redux**: `useSelector` and `useDispatch` hooks to connect components to the Redux store.
+-   **redux-persist**: Persists Redux store slices to `localStorage` so state survives page refresh.
+-   **Vite**: Next-generation frontend tooling for an incredibly fast dev environment.
+-   **Vanilla CSS with CSS Variables**: Custom properties power the dark/light theme system.
+-   **Lucide React**: For sleek, scalable SVG icons including the theme toggle Sun/Moon.
+-   **DummyJSON API**: Providing realistic mock product data with categories, ratings, and prices.
 
 ---
 
@@ -68,8 +72,7 @@ Check out the live version here:
 2.  **Install Dependencies**:
     ```bash
     npm install
-    # Also ensure router and icons are installed
-    npm install react-router-dom lucide-react
+    npm install @reduxjs/toolkit react-redux redux-persist
     ```
 
 3.  **Run the Development Server**:
@@ -83,38 +86,63 @@ Check out the live version here:
     npm run build
     ```
 
+5.  **Verify Redux is working**:
+    *   Install the **Redux DevTools** Chrome extension.
+    *   Open DevTools → Redux tab to see live state and action logs.
+
 ---
 
 ## 📖 Usage
 
-1.  **Browse Shop**: Review the curated collection of items fetched from the API.
-2.  **View Details**: Click "View Details" on any card to navigate to its dedicated informational page.
-3.  **Add to Cart**: Click the "Add to Cart" button on the product details page. Notice the Navbar badge count increments.
-4.  **Review Cart**: Click the Cart icon in the Navbar to see your selected items and total order price.
-5.  **Remove Items**: Use the specific "Remove" buttons to delete items from your current cart session.
+1.  **Browse Shop**: Review the full product catalog fetched from the DummyJSON API.
+2.  **Filter Products**: Use the Filter Sidebar to narrow products by Category, Price Range, Rating, or Sort Order.
+3.  **Search**: Type in the search bar to instantly filter products by name in real time.
+4.  **View Details**: Click "View Details" on any card to navigate to its dedicated product page.
+5.  **Add to Cart**: Click "Add to Cart" on the product details page. The Navbar badge increments instantly.
+6.  **Manage Cart**: Adjust item quantities with `+` / `−` controls or remove items entirely.
+7.  **Toggle Theme**: Click the Sun/Moon icon in the Navbar to switch between Dark and Light mode.
+8.  **Checkout**: Login as guest, then proceed to checkout. Cart is cleared automatically on order confirmation.
 
 ---
 
 ## 🧠 How It Works
 
-1.  **Component Architecture**: Split into `App.jsx` (Routing container), `pages/` (Views tied to URLs), and `components/` (Reusable UI chunks like Navbar).
-2.  **State Management**: `CartContext.jsx` creates a global provider wrapped around the application in `main.jsx`. Elements use the `useCart()` custom hook to read or update the cart.
-3.  **Data Fetching**: The `useEffect` hook runs on component mount (`Shop` and `ProductDetails`) to asynchronously request JSON data from the DummyJSON API.
-4.  **Dynamic Routing**: The `ProductDetails` component leverages `useParams()` to grab the product `ID` out of the URL string and fetch exactly that item.
-5.  **Styling**: Pure CSS handles layout logic via Grid (for the catalog layout) and Flexbox (for the cart summary and individual cards).
+1.  **Redux Store**: A single `store.js` using `configureStore` combines five slices — `cartSlice`, `authSlice`, `filterSlice`, `productsSlice`, and `themeSlice`. Wrapped with `redux-persist` to sync all state to `localStorage`.
+2.  **Slices**: Each feature owns its state, reducers, and actions in one file. Components dispatch actions using `useDispatch()` and read state using `useSelector()`.
+3.  **Async Data Fetching**: `productsSlice` uses `createAsyncThunk` to fetch all products from the DummyJSON API. Loading, success, and error states are managed inside the slice.
+4.  **Filtering Logic**: `filterSlice` holds all active filter values. `Shop.jsx` reads them via `useSelector` and computes the filtered + sorted product list using `useMemo` — only recalculating when filters or products actually change.
+5.  **Theme System**: `themeSlice` stores `"dark"` or `"light"`. `App.jsx` reads this and applies `data-theme="dark/light"` to the root element. All CSS uses custom properties (`--bg-primary`, `--text-primary`, etc.) that respond to the attribute instantly.
+6.  **Dynamic Routing**: `ProductDetails` uses `useParams()` to extract the product `:id` from the URL and fetches that specific item from the DummyJSON API.
+
+---
+
+## 🗃️ Redux Store Architecture
+
+```
+src/store/
+├── store.js                  ← configureStore + redux-persist setup
+└── slices/
+    ├── cartSlice.js           ← addToCart, removeFromCart, updateQuantity, clearCart
+    ├── authSlice.js           ← login, logout
+    ├── filterSlice.js         ← setCategory, setPriceRange, setMinRating, setSortBy, setSearchQuery, resetFilters
+    ├── productsSlice.js       ← fetchProducts (createAsyncThunk)
+    └── themeSlice.js          ← toggleTheme, setTheme
+```
 
 ---
 
 ## 📱 Responsive Design
 
--   **Mobile**: The product grid drops to single-column layouts. The two-column Cart layout stacks vertically allowing easy scrolling.
--   **Desktop**: The interface expands using CSS Grid auto-fill rules allowing beautiful repeating patterns of product cards.
--   **Adaptive**: Glassmorphism backdrops, font sizes, and button padding dynamically adjust to remain highly legible and "tap-friendly".
+-   **Mobile**: The product grid drops to a single-column layout. The Filter Sidebar collapses above the grid for easy scrolling.
+-   **Desktop**: CSS Grid with `auto-fill` and `minmax` rules creates a beautiful multi-column product catalog. The Filter Sidebar sits in a fixed-width left column.
+-   **Adaptive**: All colors, backgrounds, and borders respond to the active theme via CSS custom properties, keeping both Dark and Light modes fully polished at every screen size.
 
 ---
 
 ## 👏 Acknowledgments
 
+-   **Redux Toolkit Team**: For making modern Redux approachable and boilerplate-free.
+-   **redux-persist**: For effortless state persistence to `localStorage`.
 -   **DummyJSON**: For an incredibly easy-to-use e-commerce API.
 -   **Vite**: For the unparalleled local development speed.
 -   **React Router Team**: For providing seamless declarative routing.
@@ -130,4 +158,4 @@ Check out the live version here:
 -   🔗 LinkedIn: [Ayush Vyas](https://www.linkedin.com/in/ayush-vyas-287980286/)
 
 ---
-*Created for the Week 6 Project.*
+*Created for the Week 10 Project — Advanced State Management Upgrade.*
