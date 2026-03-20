@@ -29,7 +29,7 @@ A production-grade upgrade of the ShopZone E-Commerce SPA, migrating from Contex
 
 ## 🚀 Demo
 Check out the live version here:  
-👉 **[Live Demo Link](https://shop-zone-eta.vercel.app/)**
+👉 **[Live Demo Link](https://e-commerce-five-xi-51.vercel.app/)**
 
 ---
 
