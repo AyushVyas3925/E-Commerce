@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     setCategory,
@@ -12,16 +12,13 @@ import {
 function FilterSidebar() {
     const dispatch = useDispatch();
     const filters = useSelector(state => state.filters);
+    const { items: products } = useSelector(state => state.products);
 
-    const categories = [
-        'all',
-        'electronics',
-        'clothing',
-        'books',
-        'sports',
-        'home',
-        'beauty'
-    ];
+    // Generate dynamic categories from products list
+    const categories = useMemo(() => {
+        const uniqueCategories = ['all', ...new Set(products.map(p => p.category))];
+        return uniqueCategories;
+    }, [products]);
 
     const handleCategoryChange = (e) => {
         dispatch(setCategory(e.target.value));
@@ -50,8 +47,8 @@ function FilterSidebar() {
 
     return (
         <aside style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
             borderRadius: '12px',
             padding: '24px',
             width: '280px',
@@ -70,7 +67,7 @@ function FilterSidebar() {
 
             {/* Search */}
             <div style={{ marginBottom: '25px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#aaa' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                     Search Products
                 </label>
                 <input
@@ -81,10 +78,10 @@ function FilterSidebar() {
                     style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        background: 'var(--input-bg)',
+                        border: '1px solid var(--input-border)',
                         borderRadius: '8px',
-                        color: '#fff',
+                        color: 'var(--text-primary)',
                         outline: 'none',
                         boxSizing: 'border-box',
                         fontSize: '0.95rem'
@@ -94,7 +91,7 @@ function FilterSidebar() {
 
             {/* Category */}
             <div style={{ marginBottom: '25px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#aaa' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                     Category
                 </label>
                 <select
@@ -103,18 +100,19 @@ function FilterSidebar() {
                     style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        background: 'var(--input-bg)',
+                        border: '1px solid var(--input-border)',
                         borderRadius: '8px',
-                        color: '#fff',
+                        color: 'var(--text-primary)',
                         outline: 'none',
                         cursor: 'pointer',
-                        fontSize: '0.95rem'
+                        fontSize: '0.95rem',
+                        textTransform: 'capitalize'
                     }}
                 >
                     {categories.map(cat => (
-                        <option key={cat} value={cat} style={{ background: '#222', color: '#fff' }}>
-                            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        <option key={cat} value={cat}>
+                            {cat === 'all' ? 'All Categories' : cat.replace(/-/g, ' ')}
                         </option>
                     ))}
                 </select>
@@ -122,7 +120,7 @@ function FilterSidebar() {
 
             {/* Price Range */}
             <div style={{ marginBottom: '25px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#aaa' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                     Price: ${filters.priceRange.min} - ${filters.priceRange.max}
                 </label>
                 <input
@@ -140,7 +138,7 @@ function FilterSidebar() {
 
             {/* Rating */}
             <div style={{ marginBottom: '25px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#aaa' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                     Minimum Rating: {filters.minRating}⭐
                 </label>
                 <select
@@ -149,27 +147,27 @@ function FilterSidebar() {
                     style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        background: 'var(--input-bg)',
+                        border: '1px solid var(--input-border)',
                         borderRadius: '8px',
-                        color: '#fff',
+                        color: 'var(--text-primary)',
                         outline: 'none',
                         cursor: 'pointer',
                         fontSize: '0.95rem'
                     }}
                 >
-                    <option value={0} style={{ background: '#222', color: '#fff' }}>All Ratings</option>
-                    <option value={1} style={{ background: '#222', color: '#fff' }}>1⭐ and up</option>
-                    <option value={2} style={{ background: '#222', color: '#fff' }}>2⭐ and up</option>
-                    <option value={3} style={{ background: '#222', color: '#fff' }}>3⭐ and up</option>
-                    <option value={4} style={{ background: '#222', color: '#fff' }}>4⭐ and up</option>
-                    <option value={5} style={{ background: '#222', color: '#fff' }}>5⭐</option>
+                    <option value={0}>All Ratings</option>
+                    <option value={1}>1⭐ and up</option>
+                    <option value={2}>2⭐ and up</option>
+                    <option value={3}>3⭐ and up</option>
+                    <option value={4}>4⭐ and up</option>
+                    <option value={5}>5⭐</option>
                 </select>
             </div>
 
             {/* Sort */}
             <div style={{ marginBottom: '25px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#aaa' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                     Sort By
                 </label>
                 <select
@@ -178,19 +176,19 @@ function FilterSidebar() {
                     style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        background: 'var(--input-bg)',
+                        border: '1px solid var(--input-border)',
                         borderRadius: '8px',
-                        color: '#fff',
+                        color: 'var(--text-primary)',
                         outline: 'none',
                         cursor: 'pointer',
                         fontSize: '0.95rem'
                     }}
                 >
-                    <option value="default" style={{ background: '#222', color: '#fff' }}>Default</option>
-                    <option value="price-asc" style={{ background: '#222', color: '#fff' }}>Price: Low to High</option>
-                    <option value="price-desc" style={{ background: '#222', color: '#fff' }}>Price: High to Low</option>
-                    <option value="rating" style={{ background: '#222', color: '#fff' }}>Highest Rated</option>
+                    <option value="default">Default</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="rating">Highest Rated</option>
                 </select>
             </div>
 
