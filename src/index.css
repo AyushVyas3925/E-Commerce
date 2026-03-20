@@ -1,0 +1,119 @@
+:root { 
+  font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+  line-height: 1.5; 
+  font-weight: 400; 
+} 
+
+[data-theme="dark"] { 
+  --bg-primary: #121212; 
+  --bg-secondary: #1e1e1e; 
+  --bg-card: #1e1e1e; 
+  --bg-navbar: rgba(18, 18, 18, 0.8); 
+  --text-primary: rgba(255, 255, 255, 0.9); 
+  --text-secondary: #aaaaaa; 
+  --text-muted: #666666; 
+  --border-color: rgba(255, 255, 255, 0.1); 
+  --border-card: #333333; 
+  --accent: #646cff; 
+  --heading-gradient: linear-gradient(135deg, #ffffff 0%, #646cff 100%); 
+  --subheading-gradient: linear-gradient(to right, #fff, #aaa); 
+  --blob-color: #646cff; 
+  --input-bg: #2a2a2a; 
+  --input-border: #444; 
+  color-scheme: dark; 
+} 
+
+[data-theme="light"] { 
+  --bg-primary: #f0f2f5; 
+  --bg-secondary: #ffffff; 
+  --bg-card: #ffffff; 
+  --bg-navbar: rgba(240, 242, 245, 0.85); 
+  --text-primary: #111111; 
+  --text-secondary: #555555; 
+  --text-muted: #888888; 
+  --border-color: rgba(0, 0, 0, 0.08); 
+  --border-card: #e0e0e0; 
+  --accent: #646cff; 
+  --heading-gradient: linear-gradient(135deg, #111111 0%, #646cff 100%); 
+  --subheading-gradient: linear-gradient(to right, #111, #555); 
+  --blob-color: #646cff; 
+  --input-bg: #ffffff; 
+  --input-border: #cccccc; 
+  color-scheme: light; 
+} 
+
+body { 
+  margin: 0; 
+  min-width: 320px; 
+  min-height: 100vh; 
+  background-color: var(--bg-primary); 
+  color: var(--text-primary); 
+  transition: background-color 0.3s ease, color 0.3s ease; 
+} 
+
+input::placeholder, 
+textarea::placeholder { 
+  color: var(--text-muted); 
+}
+
+select option { 
+  background: var(--bg-secondary); 
+  color: var(--text-primary); 
+} 
+
+.app-container { 
+  max-width: 1200px; 
+  margin: 0 auto; 
+  padding: 0 20px; 
+} 
+
+@keyframes fadeIn { 
+  from { opacity: 0; transform: translateY(10px); } 
+  to { opacity: 1; transform: translateY(0); } 
+} 
+
+.fade-in { 
+  animation: fadeIn 0.4s ease-out forwards; 
+} 
+
+a { 
+  color: inherit; 
+  text-decoration: none; 
+  transition: color 0.2s; 
+} 
+
+button { 
+  cursor: pointer; 
+  border: none; 
+  outline: none; 
+  font-family: inherit; 
+  transition: all 0.2s ease; 
+} 
+
+.btn-primary { 
+  background: linear-gradient(135deg, #646cff 0%, #747bff 100%); 
+  color: white; 
+  padding: 12px 24px; 
+  border-radius: 8px; 
+  font-weight: 600; 
+  box-shadow: 0 4px 14px rgba(100, 108, 255, 0.3); 
+} 
+
+.btn-primary:hover { 
+  transform: translateY(-1px); 
+  box-shadow: 0 6px 20px rgba(100, 108, 255, 0.4); 
+} 
+
+.btn-danger { 
+  background: rgba(255, 71, 87, 0.1); 
+  color: #ff4757; 
+  padding: 8px 16px; 
+  border-radius: 6px; 
+  font-size: 0.9rem; 
+  border: 1px solid rgba(255, 71, 87, 0.2); 
+} 
+
+.btn-danger:hover { 
+  background: #ff4757; 
+  color: white; 
+}
